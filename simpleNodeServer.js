@@ -7,3 +7,4 @@ http.createServer(function(request, response) {
 	response.end();
 
 }).listen(8000);
+console.log('server is active')
