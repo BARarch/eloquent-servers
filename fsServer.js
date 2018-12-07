@@ -44,7 +44,16 @@ methods.GET = function(path, respond) {
 };
 
 methods.DELETE = function(path, respond) {
-
+    fs.stat(path, function(error, stats) {
+        if (error && error.code == "ENOENT")
+            respond(204);
+        else if (error)
+            respond(500, error.toString())
+        else if (stats.isDirectory())
+            fs.rmdir(path, respondErrorOrNothing(respond));
+        else
+            fs.unlink(path, respondErrorOrNothing(respond))
+    });
 };
 
 function respondErrorOrNothing(respond) {
@@ -57,5 +66,12 @@ function respondErrorOrNothing(respond) {
 }
 
 methods.PUT = function(path, respond, request) {
-
+    var outStream = fs.createWriteStream(path);
+    outStream.on("error", function(error) {
+        respond(500, error.toString());
+    });
+    outStream.on("finnish", function() {
+        respond(204);
+    });
+    request.pipe(outStream);
 };
