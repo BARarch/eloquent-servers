@@ -9,4 +9,4 @@ http.createServer(function(request, response) {
         response.end();
     });
 }).listen(8000);
-console.log("ChunkServer is on")
+console.log("ChunkServer is on");
