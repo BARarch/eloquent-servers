@@ -39,7 +39,7 @@ methods.GET = function(path, respond) {
                     respond(200, files.join("\n"));
             });
         else
-            respond(200, fs.createReadStream(path), require("mime").lookup(path));
+            respond(200, fs.createReadStream(path), require("mime-types").lookup(path));
     });
 };
 
@@ -70,7 +70,8 @@ methods.PUT = function(path, respond, request) {
     outStream.on("error", function(error) {
         respond(500, error.toString());
     });
-    outStream.on("finnish", function() {
+    outStream.on("finish", function() {
+        process.stdout.write("Finnshed PUT");
         respond(204);
     });
     request.pipe(outStream);
